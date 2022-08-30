@@ -4,7 +4,7 @@ import Searchbar from './Searchbar/Searchbar';
 
 function Header() {
     return (
-        <header className={styles.header}>
+        <header className={`${styles.header} container`}>
             <Searchbar />
         </header>
     );

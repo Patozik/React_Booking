@@ -1,0 +1,10 @@
+.container {
+    border: 1px solid #cdcdcd;
+    margin: 10px auto;
+    padding: 20px;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.5rem;
+}

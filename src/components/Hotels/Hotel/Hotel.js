@@ -1,8 +1,16 @@
 import React from 'react';
 import styles from './Hotel.module.css';
 import img from '../../../assets/images/hotel.jpg';
+import PropTypes from 'prop-types';
 
-function Hotel() {
+const propTypes = {
+    name: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    rating: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+};
+
+function Hotel(props) {
     return (
         <div className={`card ${styles.hotel}`}>
             <div className="card-body">
@@ -16,12 +24,12 @@ function Hotel() {
                     <div className="col-8">
                         <div className="row">
                             <div className="col">
-                                <p className={styles.title}>Hotel</p>
-                                <span className="badge bg-info text-dark">Warszawa</span>
+                                <p className={styles.title}>{props.name}</p>
+                                <span className="badge bg-info text-dark">{props.city}</span>
                             </div>
                             <div className="col text-end">
                                 <h5>
-                                    Ocena: 8.3
+                                    Ocena: {props.rating}
                                     <a href="#" className="btn btn-primary mx-2 px-5">Pokaż</a>
                                 </h5>
                             </div>
@@ -29,12 +37,14 @@ function Hotel() {
                     </div>
 
                     <div className="col-12">
-                        <p className={styles.description}>Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.</p>
+                        <p className={styles.description}>{props.description}</p>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
+Hotel.propTypes = propTypes;
 
 export default Hotel;

@@ -26,7 +26,7 @@ function Searchbar(props){
             
                 <button
                     onClick={search} 
-                    className="btn btn-secondary ms-2">
+                    className={`btn btn-${props.theme} ms-2`}>
                     Szukaj
                 </button>
             </div>

@@ -3,12 +3,15 @@ import './App.css';
 import Header from './components/Header/Header';
 import Menu from './components/Menu/Menu';
 import Hotels from './components/Hotels/Hotels';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import LoadingIcon from './components/UI/LoadingIcon/LoadingIcon';
 import Searchbar from './components/UI/Searchbar/Searchbar';
 import Layout from './components/Layout/Layout';
 import Footer from './components/Footer/Footer';
 import ThemeButton from './components/UI/ThemeButton/ThemeButton';
+import ThemeContext from './context/themeContext';
+import AuthContex from './context/authContext';
+
 
 class App extends Component {
 
@@ -34,14 +37,15 @@ class App extends Component {
   state = {
       hotels: [],
       loading: true,
-      theme: 'primary'
+      theme: 'primary',
+      isAuthenticated: false
   };
 
   searchHandler = (term) => {
     const hotels = [...this.hotels]
       .filter(x => x.name
-      .toLocaleLowerCase()
-      .includes(term.toLocaleLowerCase()));
+      .toLowerCase()
+      .includes(term.toLowerCase()));
     this.setState({ hotels });
   }
 
@@ -60,28 +64,43 @@ class App extends Component {
   }
 
   render(){
+    const header = (
+      <Header>
+        <Searchbar
+          onSearch={term => this.searchHandler(term)} />
+        <ThemeButton />
+      </Header>
+    );
+    const menu = (
+      <Menu />
+    );
+    const content = (
+      this.state.loading
+        ? <LoadingIcon />
+        : <Hotels hotels={this.state.hotels} />
+    );
+    const footer = (
+      <Footer />
+    );
+
     return (
-        <Layout
-          header={
-            <Header>
-              <Searchbar 
-                onSearch={term => this.searchHandler(term)} 
-                theme={this.state.theme}/>
-              <ThemeButton onChange={this.changeTheme}/>
-            </Header>
-          }
-          menu={
-            <Menu theme={this.state.theme}/>
-          }
-          content={
-            this.state.loading
-              ? <LoadingIcon theme={this.state.theme} />
-              : <Hotels hotels={this.state.hotels} theme={this.state.theme} />
-          }
-          footer={
-            <Footer theme={this.state.theme}/>
-          }
-        />
+      <AuthContex.Provider value={{ 
+        isAuthenticated: this.state.isAuthenticated,
+        login: () => this.setState({ isAuthenticated: true }),
+        logout: () => this.setState({ isAuthenticated: false })
+      }}>
+        <ThemeContext.Provider value={{
+          color: this.state.theme,
+          changeTheme: this.changeTheme
+        }}>
+          <Layout
+            header={header}
+            menu={menu}
+            content={content}
+            footer={footer}
+          />
+        </ThemeContext.Provider>
+      </AuthContex.Provider>
     );
   }
 }

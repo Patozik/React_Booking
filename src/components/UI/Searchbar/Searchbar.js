@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ThemeContext from "../../../context/themeContext";
 
@@ -12,13 +12,24 @@ function Searchbar(props){
 
     const theme = useContext(ThemeContext);
 
+    const inputRef = useRef();
+
     const search = () => {
         props.onSearch(term);
     }
 
+    const focusInput = () => {
+        inputRef.current.focus();
+    }
+
+    useEffect(() => {
+        focusInput();
+    }, [] );
+
     return(
             <div className="d-flex">
                 <input
+                    ref={inputRef}
                     value={term}
                     onKeyDown={e => e.key === 'Enter' && search()}
                     onChange={e => setTerm(e.target.value)}

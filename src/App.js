@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header/Header';
 import Menu from './components/Menu/Menu';
 import Hotels from './components/Hotels/Hotels';
-import React, { Component } from 'react';
+import { useEffect, useReducer } from 'react';
 import LoadingIcon from './components/UI/LoadingIcon/LoadingIcon';
 import Searchbar from './components/UI/Searchbar/Searchbar';
 import Layout from './components/Layout/Layout';
@@ -12,97 +12,107 @@ import ThemeButton from './components/UI/ThemeButton/ThemeButton';
 import ThemeContext from './context/themeContext';
 import AuthContex from './context/authContext';
 
+const backendHotels = [
+  {
+    id: 1,
+    name: 'Pod brzozą',
+    city: 'Rzeszów',
+    rating: 8.3,
+    description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
+    image: ''
+  },
+  {
+    id: 2,
+    name: 'Słoneczna',
+    city: 'Warszawa',
+    rating: 7.3,
+    description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
+    image: ''
+  }
+];
 
-class App extends Component {
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'change-theme' :
+      const theme = state.theme === 'primary' ? 'warning' : 'primary';
+      return {...state, theme };
+    case 'set-hotels' :
+      return {...state, hotels: action.hotels}; 
+    case 'set-loading':
+      return { ...state, loading: action.loading};
+    case 'login':
+      return { ...state, isAuthenticated: true };
+    case 'logout':
+      return { ...state, isAuthenticated: false };
+    default :
+      throw new Error('Nie ma takiej akcji: ' + action.type);
+  }
+}
 
-  hotels = [
-    {
-      id: 1,
-      name: 'Pod brzozą',
-      city: 'Rzeszów',
-      rating: 8.3,
-      description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
-      image: ''
-    },
-    {
-      id: 2,
-      name: 'Słoneczna',
-      city: 'Warszawa',
-      rating: 7.3,
-      description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
-      image: ''
-    },
-  ]
+const initialState = {
+  hotels: [],
+  loading: true,
+  isAuthenticated: false,
+  theme: 'primary'
+}
 
-  state = {
-      hotels: [],
-      loading: true,
-      theme: 'primary',
-      isAuthenticated: false
-  };
+function App() {
 
-  searchHandler = (term) => {
-    const hotels = [...this.hotels]
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const searchHandler = term => {
+    const newHotels = [...backendHotels]
       .filter(x => x.name
-      .toLowerCase()
-      .includes(term.toLowerCase()));
-    this.setState({ hotels });
+        .toLowerCase()
+        .includes(term.toLowerCase()));
+    dispatch({ type: 'set-hotels', hotels: newHotels});
   }
 
-  componentDidMount() {
+  useEffect(() => {
     setTimeout(() => {
-      this.setState({ 
-        hotels: this.hotels, 
-        loading: false 
-      });
+      dispatch({ type: 'set-hotels', hotels: backendHotels });
+      dispatch({ type: 'set-loading', loading: false });
     }, 1000);
-  }
+  }, []);
 
-  changeTheme = () => {
-    const newTheme = this.state.theme === 'primary' ? 'secondary' : 'primary';
-    this.setState({ theme: newTheme });
-  }
+  const header = (
+    <Header>
+      <Searchbar
+        onSearch={term => searchHandler(term)} />
+      <ThemeButton />
+    </Header>
+  );
+  const menu = (
+    <Menu />
+  );
+  const content = (
+    state.loading
+      ? <LoadingIcon />
+      : <Hotels hotels={state.hotels} />
+  );
+  const footer = (
+    <Footer />
+  );
 
-  render(){
-    const header = (
-      <Header>
-        <Searchbar
-          onSearch={term => this.searchHandler(term)} />
-        <ThemeButton />
-      </Header>
-    );
-    const menu = (
-      <Menu />
-    );
-    const content = (
-      this.state.loading
-        ? <LoadingIcon />
-        : <Hotels hotels={this.state.hotels} />
-    );
-    const footer = (
-      <Footer />
-    );
-
-    return (
-      <AuthContex.Provider value={{ 
-        isAuthenticated: this.state.isAuthenticated,
-        login: () => this.setState({ isAuthenticated: true }),
-        logout: () => this.setState({ isAuthenticated: false })
+  return (
+    <AuthContex.Provider value={{
+      isAuthenticated: state.isAuthenticated,
+      login: () => dispatch({ type: 'login'}),
+      logout: () => dispatch({ type: 'logout'}),
+    }}>
+      <ThemeContext.Provider value={{
+        color: state.theme,
+        changeTheme: () => dispatch({ type: 'change-theme' })
       }}>
-        <ThemeContext.Provider value={{
-          color: this.state.theme,
-          changeTheme: this.changeTheme
-        }}>
-          <Layout
-            header={header}
-            menu={menu}
-            content={content}
-            footer={footer}
-          />
-        </ThemeContext.Provider>
-      </AuthContex.Provider>
-    );
-  }
+        <Layout
+          header={header}
+          menu={menu}
+          content={content}
+          footer={footer}
+        />
+      </ThemeContext.Provider>
+    </AuthContex.Provider>
+  );
 }
 
 export default App;

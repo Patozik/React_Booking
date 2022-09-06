@@ -1,7 +1,6 @@
 .container {
-    border: 1px solid #cdcdcd;
     margin: 10px auto;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .title {

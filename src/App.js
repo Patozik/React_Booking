@@ -12,6 +12,7 @@ import ThemeButton from './components/UI/ThemeButton/ThemeButton';
 import ThemeContext from './context/themeContext';
 import AuthContex from './context/authContext';
 import BestHotel from './components/Hotels/BestHotel/BestHotel';
+import InspiringQuote from './components/InspiringQuote/InspiringQuote';
 
 const backendHotels = [
   {
@@ -69,14 +70,14 @@ function App() {
     dispatch({ type: 'set-hotels', hotels: newHotels});
   }
 
-  const getBestHotel = useCallback((options) => {
-    if (state.hotels.length < options.minHotels) {
+  const getBestHotel = () => {
+    if (state.hotels.length < 2 ) {
       return null;
     } else {
       return state.hotels
         .sort((a, b) => a.rating > b.rating ? -1 : 1 ) [0];
     }
-  }, [state.hotels]);
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -87,6 +88,7 @@ function App() {
 
   const header = (
     <Header>
+      <InspiringQuote />
       <Searchbar
         onSearch={term => searchHandler(term)} />
       <ThemeButton />
@@ -100,7 +102,7 @@ function App() {
       ? <LoadingIcon />
       : (
         <>
-          <BestHotel getHotel={getBestHotel}/>
+          {getBestHotel() ? <BestHotel getHotel={getBestHotel} /> : null}
           <Hotels hotels={state.hotels} />
         </>
       )

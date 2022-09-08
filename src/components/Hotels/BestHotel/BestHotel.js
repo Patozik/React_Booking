@@ -22,7 +22,7 @@ const BestHotel = (props) => {
     }, []);
 
     return (
-        <div className="card bg-success text-white container">
+        <div className="mt-2 card bg-success text-white container">
             <div className="card-header">
                 Najlepsza oferta !
             </div>

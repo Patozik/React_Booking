@@ -12,7 +12,8 @@ function Hotels(props) {
         <div className={`${styles.container} container`}>
             <h2 className={styles.title}>Oferty :</h2>
             {props.hotels.map(hotel => 
-                <Hotel 
+                <Hotel
+                    onOpen={props.onOpen}
                     key={hotel.id} {...hotel}/>
             )}
         </div>

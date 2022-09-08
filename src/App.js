@@ -15,6 +15,7 @@ import BestHotel from './components/Hotels/BestHotel/BestHotel';
 import InspiringQuote from './components/InspiringQuote/InspiringQuote';
 import LastHotel from './components/Hotels/LastHotel/LastHotel';
 import useStateStorage from './hooks/useStateStorage';
+import useWebsiteTitle from './hooks/useWebsiteTitle';
 
 const backendHotels = [
   {
@@ -62,8 +63,9 @@ const initialState = {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const [lastHotel, setLastHotel] = useStateStorage('last-hotel', null);
+
+  useWebsiteTitle('Strona główna');
 
   const searchHandler = term => {
     const newHotels = [...backendHotels]

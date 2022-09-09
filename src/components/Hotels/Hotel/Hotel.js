@@ -4,6 +4,7 @@ import img from '../../../assets/images/hotel.jpg';
 import PropTypes from 'prop-types';
 import ThemeContext from '../../../context/themeContext';
 import useAuth from '../../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 const propTypes = {
     name: PropTypes.string.isRequired,
@@ -40,7 +41,10 @@ function Hotel(props) {
                             <div className="col text-end">
                                 <h5>
                                     Ocena: {props.rating}
-                                        <a href="#" onClick={clickHandler} className={`btn btn-${theme.color} mx-2 px-5`}>Pokaż</a>
+                                        <Link to={`/hotele/${props.id}`} >
+                                            Pokaż
+                                        </Link>
+                                        {/* <a href="#" onClick={clickHandler} className={`btn btn-${theme.color} mx-2 px-5`}>Pokaż</a> */}
                                 </h5>
                             </div>
                         </div>

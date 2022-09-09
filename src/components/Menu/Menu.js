@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styles from './Menu.module.css';
 import ThemeContext from '../../context/themeContext';
 import useAuth from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 function Menu() {
     
@@ -25,7 +26,7 @@ function Menu() {
         <div className={`${styles.menuContainer} card bg-light container`}>
             <ul className={styles.menu}>
                 <li className={styles.menuItem}>
-                    <a href="#" className={`btn btn-${theme.color}`}>Home</a>
+                    <Link to="/" className={`btn btn-${theme.color}`}>Home</Link>
                 </li>
                 {auth
                     ? (

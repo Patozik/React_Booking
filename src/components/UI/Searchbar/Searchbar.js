@@ -1,21 +1,17 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import ThemeContext from "../../../context/themeContext";
-
-const propTypes = {
-    onSearch: PropTypes.func.isRequired
-};
+import { useNavigate } from 'react-router-dom';
 
 function Searchbar(props){
     
     const [term, setTerm] = useState('');
-
     const theme = useContext(ThemeContext);
-
     const inputRef = useRef();
+    const navigate = useNavigate();
 
     const search = () => {
-        props.onSearch(term);
+        // props.onSearch(term);
+        navigate(`/wyszukaj/${term}`);
     }
 
     const focusInput = () => {
@@ -45,7 +41,5 @@ function Searchbar(props){
             </div>
     );
 }
-
-Searchbar.propTypes = propTypes;
 
 export default Searchbar;

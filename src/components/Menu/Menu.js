@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styles from './Menu.module.css';
 import ThemeContext from '../../context/themeContext';
 import useAuth from '../../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function Menu() {
     
@@ -26,13 +26,18 @@ function Menu() {
         <div className={`${styles.menuContainer} card bg-light container`}>
             <ul className={styles.menu}>
                 <li className={styles.menuItem}>
-                    <Link to="/" className={`btn btn-${theme.color}`}>Home</Link>
+                    <NavLink to="/" className={({ isActive }) => isActive ? 'btn btn-info' : `btn btn-${theme.color}`}>Home</NavLink>
                 </li>
                 {auth
                     ? (
-                        <li className={styles.menuItem}>
-                            <a href="#" onClick={logout} className={`ms-2 btn btn-${theme.color}`}>Wyloguj</a>
-                        </li>
+                        <>
+                            <li className={styles.menuItem}>
+                                <NavLink to="/profil" className={({ isActive }) => isActive ? 'ms-2 btn btn-info' : `ms-2 btn btn-${theme.color}`}>Mój profil</NavLink>
+                            </li>
+                            <li className={styles.menuItem}>
+                                <a href="#" onClick={logout} className={`ms-2 btn btn-${theme.color}`}>Wyloguj</a>
+                            </li>
+                        </>
                     )
                     : (
                         <li className={styles.menuItem}>

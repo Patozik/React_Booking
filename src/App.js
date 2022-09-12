@@ -18,6 +18,8 @@ import Hotel from './pages/Hotel/Hotel';
 import Search from './pages/Search/Search';
 import NotFound from './pages/404/404';
 import Login from './pages/Auth/Login/Login';
+import ErrorBoundary from './hoc/ErrorBoundary';
+
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 
 function App() {
@@ -35,19 +37,21 @@ function App() {
   );
   const content = (
     <div>
-      <Suspense fallback={<p>Ładowanie</p>}>
-        <Routes>
-          <Route path="/hotele/:id" element={<Hotel />} />
-          <Route path="/wyszukaj/" element={<Search />} >
-            <Route path=":term" element={<Search />} />
-            <Route path="" element={<Search />} />
-          </Route>
-          <Route path="/profil/*" element={state.isAuthenticated ? <Profile /> : <Navigate to="/zaloguj" />} />
-          <Route path="/zaloguj" element={<Login />} />
-          <Route path="/" element={<Home />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<p>Ładowanie</p>}>
+          <Routes>
+            <Route path="/hotele/:id" element={<Hotel />} />
+            <Route path="/wyszukaj/" element={<Search />} >
+              <Route path=":term" element={<Search />} />
+              <Route path="" element={<Search />} />
+            </Route>
+            <Route path="/profil/*" element={state.isAuthenticated ? <Profile /> : <Navigate to="/zaloguj" />} />
+            <Route path="/zaloguj" element={<Login />} />
+            <Route path="/" element={<Home />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </div>
 );
   const footer = (
@@ -69,12 +73,12 @@ function App() {
             state: state,
             dispatch: dispatch
           }}>
-            <Layout
-              header={header}
-              menu={menu}
-              content={content}
-              footer={footer}
-            />
+              <Layout
+                header={header}
+                menu={menu}
+                content={content}
+                footer={footer}
+              />
           </ReducerContext.Provider>
         </ThemeContext.Provider>
       </AuthContex.Provider>

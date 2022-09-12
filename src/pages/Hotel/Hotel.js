@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import LoadingIcon from "../../components/UI/LoadingIcon/LoadingIcon";
+import useWebsiteTitle from "../../hooks/useWebsiteTitle";
 
 function Hotel(props) {
-    const { id } = useParams();
+    // const { id } = useParams();
     const [hotel, setHotel] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const setTitle = useWebsiteTitle();
     
     const fetchHotel = () => {
         setHotel({
@@ -16,6 +19,7 @@ function Hotel(props) {
             description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
             image: ''
         });
+        setTitle('Hotel Słoneczna');
         setLoading(false);
     }
     
@@ -26,7 +30,7 @@ function Hotel(props) {
     }, []);
 
     return loading ? <LoadingIcon /> : (
-        <h1>Hotel: {hotel.name} </h1>
+        <h1 className="container" >Hotel: {hotel.name} </h1>
     );
 }
 

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 
 function LastHotel(props) {
     return (
@@ -11,7 +12,7 @@ function LastHotel(props) {
                     <span className="badge bg-info text-dark">{props.city}</span>
                 </div>
                 <div style={{width: '100px'}} className="ms-auto d-flex justify-content-between">
-                    <button className="btn btn-sm btn-dark">Tak</button>
+                    <Link to={`/hotele/${props.id}`} className="btn btn-sm btn-dark">Tak</Link>
                     <button onClick={props.onRemove} className="btn btn-sm btn-dark">Nie</button>
                 </div>
             </div>

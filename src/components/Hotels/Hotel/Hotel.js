@@ -41,10 +41,12 @@ function Hotel(props) {
                             <div className="col text-end">
                                 <h5>
                                     Ocena: {props.rating}
-                                        <Link to={`/hotele/${props.id}`} >
+                                    <Link to={`/hotele/${props.id}`} className={`btn btn-${theme.color} mx-2 px-5`}>
+                                        <div onClick={clickHandler}>
                                             Pokaż
-                                        </Link>
-                                        {/* <a href="#" onClick={clickHandler} className={`btn btn-${theme.color} mx-2 px-5`}>Pokaż</a> */}
+                                        </div>
+                                    </Link>
+                                        {/* <a href="#"  className={`btn btn-${theme.color} mx-2 px-5`}>Pokaż</a> onClick={clickHandler}*/}
                                 </h5>
                             </div>
                         </div>

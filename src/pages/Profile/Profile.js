@@ -1,6 +1,7 @@
 import { Routes, Route ,NavLink } from "react-router-dom";
 import ProfileDetails from "./ProfileDetails/ProfileDetails";
 import MyHotels from "./MyHotels/MyHotels";
+import AddHotel from "./MyHotels/AddHotel/AddHotel";
 
 export default function Profile(props) {
     return(
@@ -22,6 +23,7 @@ export default function Profile(props) {
                     <Routes>
                         <Route path="*" element={<ProfileDetails />} />
                         <Route path="hotele" element={<MyHotels />} />
+                        <Route path="hotele/dodaj" element={<AddHotel />} />
                     </Routes>
                     
                 </div>

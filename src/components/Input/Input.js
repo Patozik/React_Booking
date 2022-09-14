@@ -125,6 +125,10 @@ const InputTextarea = props => {
 
 function Input(props) {
     switch (props.type) {
+        case 'email':
+            return <InputText {...props} type="email" />
+        case 'password':
+            return <InputText {...props} type="password" />
         case 'select':
             return <InputSelect {...props} />
         case 'checkbox':

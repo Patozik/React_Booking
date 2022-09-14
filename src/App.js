@@ -19,6 +19,7 @@ import Search from './pages/Search/Search';
 import NotFound from './pages/404/404';
 import Login from './pages/Auth/Login/Login';
 import ErrorBoundary from './hoc/ErrorBoundary';
+import Register from './pages/Auth/Register/Register';
 
 const Profile = lazy(() => import('./pages/Profile/Profile'));
 
@@ -47,6 +48,7 @@ function App() {
             </Route>
             <Route path="/profil/*" element={state.isAuthenticated ? <Profile /> : <Navigate to="/zaloguj" />} />
             <Route path="/zaloguj" element={<Login />} />
+            <Route path="/zarejestruj" element={<Register />} />
             <Route path="/" element={<Home />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

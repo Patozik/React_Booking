@@ -10,6 +10,9 @@ const availableRules = {
     },
     min(value, rule) {
         return value.length >= rule.length ? '' : `Minimum znaków: ${rule.length}`;
+    },
+    email(value) {
+        return validateEmail(value) ? '' : 'Niepoprawny email';
     }
 };
 

@@ -1,6 +1,5 @@
 export default function LoadingButtons(props) {
     const className = props.className || 'btn btn-primary';
-    const empty = props.empty;
 
     const buttonProps = {...props};
     delete buttonProps.loading;
@@ -12,7 +11,7 @@ export default function LoadingButtons(props) {
                     <span className="sr-only">Ładowanie...</span>
                 </button>
             )
-            : <button {...buttonProps} className={`mt-2 btn ${className} ${empty}`} >{props.children}</button>
+            : <button {...buttonProps} className={`mt-2 btn ${className}`} >{props.children}</button>
     );
 }
 

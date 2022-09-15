@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingButtons from "../../../components/UI/LoadingButton/LoadingButton";
 import { validate } from "../../../helpers/validations";
 import Input from "../../../components/Input/Input";
+import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Register(props) {
+    const [auth, setAuth] = useAuth();
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const [error, setError] = useState('');
     
     const [form, setForm] = useState({
         email: {
@@ -26,15 +32,27 @@ export default function Register(props) {
     const valid = !Object.values(form)
         .map(input => input.error)
         .filter(error => error)
-        .length;
+        .length && (form.email.value && form.password.value) ? true : false;
 
-    const submit = e => {
+    const submit = async e => {
         e.preventDefault();
         setLoading(true);
 
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
+        try {
+            const res = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`, {
+                email: form.email.value,
+                password: form.password.value,
+                returnSecureToken: true
+            });
+
+            setAuth(true, res.data);
+            navigate('/');
+        } catch (err) {
+            console.log(err.response);
+            setError(err.response.data.error.message);
+        }
+        
+        setLoading(false);
     };
 
     const changeHandler = (value, fieldName) => {
@@ -49,6 +67,12 @@ export default function Register(props) {
             }
         });
     }
+
+    useEffect(() => {
+        if (auth) {
+            navigate('/');
+        }
+    },[]);
 
     
     return (
@@ -75,6 +99,10 @@ export default function Register(props) {
                         onChange={val => changeHandler(val, 'password')}
                         error={form.password.error}
                         showError={form.password.showError} />
+
+                    {error ? (
+                        <div className="mt-3 alert alert-danger">{error}</div>
+                    ) : null}
 
                     <div className="text-end">
                         <LoadingButtons

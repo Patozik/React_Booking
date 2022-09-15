@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoadingButtons from "../../../../components/UI/LoadingButton/LoadingButton";
 import Input from "../../../../components/Input/Input";
 import { validate } from "../../../../helpers/validations";
@@ -73,14 +73,10 @@ const AddHotel = props => {
         } });
     }
 
-    const isEmpty = () => {
-        if (!form.name.value || !form.description.value || !form.city.value || 
-            form.name.error || form.description.error || form.city.error) return 'disabled';
-    }
-
-    useEffect(() => {
-        isEmpty();
-    }, [form.name.value, form.description.value, form.city.value]);
+    const valid = !Object.values(form)
+        .map(input => input.error)
+        .filter(error => error)
+        .length && (form.name.value && form.description.value && form.city.value) ? true : false;
 
     return(
         <div className="card">
@@ -162,7 +158,7 @@ const AddHotel = props => {
 
                     <div className="text-end">
                         <LoadingButtons
-                            empty={isEmpty()}
+                            disabled={!valid}
                             loading={loading}
                             className="btn-success">
                             Dodaj hotel

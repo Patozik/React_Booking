@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const propTypes = {
     name: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
+    rating: PropTypes.number,
     description: PropTypes.string.isRequired,
 };
 

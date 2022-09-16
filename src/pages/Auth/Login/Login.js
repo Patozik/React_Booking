@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import LoadingButtons from "../../../components/UI/LoadingButton/LoadingButton";
+import axios from "../../../axios";
 
 export default function Login(props) {
 
@@ -9,33 +10,40 @@ export default function Login(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [valid, setValid] = useState(null);
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        setTimeout(() => {
-            //logowanie
-            if (true) {
-                setAuth(true);
-                navigate('/');
-            } else {
-                setValid(false);
-                setPassword('');
-            }
-
+        try {
+            const res = await axios.post('accounts:signInWithPassword', {
+                email,
+                password,
+                returnSecureToken: true
+            });
+            setAuth({
+                email: res.data.email,
+                token: res.data.idToken,
+                userId: res.data.localId,
+            });
+            navigate('/');
+            
+        } catch (err) {
+            setError(err.response.data.error.message);
+            console.log(err.response);
             setLoading(false);
-        },500);
+        }
+
     }
 
     return (
         <div className="container">
             <h2>Logowanie: </h2>
 
-            {valid === false ? (
-                <div className="alert alert-danger">Niepoprawne dane logowania</div>
+            {error ? (
+                <div className="alert alert-danger">{error}</div>
             ) : null }
 
             <form onSubmit={submit}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import LoadingButtons from "../../../components/UI/LoadingButton/LoadingButton";
 import { validate } from "../../../helpers/validations";
 import Input from "../../../components/Input/Input";
-import axios from "axios";
+import axios from "../../../axios";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -39,20 +39,24 @@ export default function Register(props) {
         setLoading(true);
 
         try {
-            const res = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY}`, {
+            const res = await axios.post('accounts:signUp', {
                 email: form.email.value,
                 password: form.password.value,
                 returnSecureToken: true
             });
 
-            setAuth(true, res.data);
+            setAuth({
+                email: res.data.email,
+                token: res.data.idToken,
+                userId: res.data.localId,
+            });
             navigate('/');
         } catch (err) {
             console.log(err.response);
             setError(err.response.data.error.message);
+            setLoading(false);
         }
         
-        setLoading(false);
     };
 
     const changeHandler = (value, fieldName) => {

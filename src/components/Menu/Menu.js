@@ -10,12 +10,6 @@ function Menu() {
 
     const theme = useContext(ThemeContext);
 
-    const login = (e) => {
-        e.preventDefault();
-        // auth.login();
-        setAuth(true);
-    }
-
     const logout = (e) => {
         e.preventDefault();
         // auth.logout();
@@ -46,7 +40,9 @@ function Menu() {
                     : (
                         <>
                             <li className={styles.menuItem}>
-                                <a href="#" onClick={login} className={`ms-2 btn btn-${theme.color}`}>Zaloguj</a>
+                                <NavLink to="/zaloguj" className={({ isActive }) => isActive ? 'ms-2 btn btn-info' : `ms-2 btn btn-${theme.color}`}>
+                                    Zaloguj
+                                </NavLink>
                             </li>
                             <li className={styles.menuItem}>
                                 <NavLink to="/zarejestruj" className={({ isActive }) => isActive ? 'ms-2 btn btn-info' : `ms-2 btn btn-${theme.color}`}>

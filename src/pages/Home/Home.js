@@ -5,25 +5,8 @@ import LastHotel from '../../components/Hotels/LastHotel/LastHotel';
 import useStateStorage from '../../hooks/useStateStorage';
 import useWebsiteTitle from '../../hooks/useWebsiteTitle';
 import LoadingIcon from '../../components/UI/LoadingIcon/LoadingIcon';
-
-const backendHotels = [
-    {
-        id: 1,
-        name: 'Pod brzozą',
-        city: 'Rzeszów',
-        rating: 8.3,
-        description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
-        image: ''
-    },
-    {
-        id: 2,
-        name: 'Słoneczna',
-        city: 'Warszawa',
-        rating: 7.3,
-        description: 'Mieszkanie o powierzchni 59,12 m2 (2-poziomowe) zlokalizowane w Rzeszowie ul. Aleja Generała Władysława Sikorskiego. Mieszkanie usytuowane jest na 3 piętrze, 3 piętrowego bloku. Do mieszkania należy komórka lokatorska, duży balkon. Nieruchomość jest w pełni umeblowane, posiada klimatyzacje oraz wyposażone jest w sprzęt AGD.',
-        image: ''
-    }
-];
+import axios from '../../axios_database';
+import { objectToArrayWithId } from '../../helpers/objects';
 
 export default function Home(props) {
 
@@ -46,12 +29,20 @@ export default function Home(props) {
     const openHotel = (hotel) => setLastHotel(hotel);
 
     const removeLastHotel = () => setLastHotel(null);
+
+    const fetchHotels = async () => {
+        try {
+            const res = await axios.get('/hotels.json');
+            const newHotel = objectToArrayWithId(res.data).filter(hotel => hotel.status === "1");
+            setHotels(newHotel);
+        } catch (err) {
+            console.log(err.response);
+        }
+        setLoading(false);
+    };
     
     useEffect(() => {
-        setTimeout(() => {
-            setHotels(backendHotels);
-            setLoading(false);
-        }, 1000);
+        fetchHotels();
     }, []);
 
     return loading ? <LoadingIcon /> : (

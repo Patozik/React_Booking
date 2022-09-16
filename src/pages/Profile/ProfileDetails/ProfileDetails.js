@@ -1,28 +1,51 @@
 import { useEffect, useState } from "react";
 import LoadingButtons from "../../../components/UI/LoadingButton/LoadingButton";
 import { validateEmail } from "../../../helpers/validations";
+import useAuth from "../../../hooks/useAuth";
+import axios from "../../../axios";
 
 export default function ProfileDetails(props) {
 
-    const [email, setEmail] = useState('email@email.com');
+    const [auth, setAuth] = useAuth();
+    const [email, setEmail] = useState(auth.email);
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
     const [errors, setErrors] = useState({
         email: '',
         password: ''
     });
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        setTimeout(() => {
-            //walidacja
+        try {
+            const data = {
+                idToken: auth.token,
+                email: email,
+                returnSecureToken: true
+            };
+            if (password) {
+                data.password = password;
+            }
 
-            //zapisywanie
+            const res = await axios.post('accounts:update', data);
 
-            setLoading(false);
-        }, 500);
+            setAuth({
+                email: res.data.email,
+                token: res.data.idToken,
+                userId: res.data.localId,
+            });
+
+            setSuccess(true);
+
+            console.log(res);
+        } catch (err) {
+            console.log(err.response);
+        }
+
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -33,18 +56,23 @@ export default function ProfileDetails(props) {
         }
     }, [email]);
 
-    useEffect(() => {
-        if (password.length >= 4 || !password) {
-            setErrors({ ...errors, password: '' });
-        } else {
-            setErrors({ ...errors, password: 'Minimum 4 znaki' });
-        }
-    }, [password]);
+    // useEffect(() => {
+    //     if (password.length >= 4 || !password) {
+    //         setErrors({ ...errors, password: '' });
+    //     } else {
+    //         setErrors({ ...errors, password: 'Minimum 4 znaki' });
+    //     }
+    // }, [password]);
 
-    const buttonDisabled = Object.values(errors).filter(x => x).length || password.length === 0 ;
+    const buttonDisabled = Object.values(errors).filter(x => x).length; //|| password.length === 0 ;
 
     return (
         <form onSubmit={submit}>
+
+            {success ? (
+                <div className="alert alert-success">Dane zapisane</div>
+            ) : null}
+
             <div className="form-group">
                 <label>Email:</label>
                 <input

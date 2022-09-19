@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Menu from './components/Menu/Menu';
-import { useReducer, lazy , Suspense, useEffect } from 'react';
+import { useReducer, lazy , Suspense } from 'react';
 import Searchbar from './components/UI/Searchbar/Searchbar';
 import Layout from './components/Layout/Layout';
 import Footer from './components/Footer/Footer';

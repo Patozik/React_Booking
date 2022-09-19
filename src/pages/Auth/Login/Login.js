@@ -38,6 +38,13 @@ export default function Login(props) {
 
     }
 
+    useEffect(() => {
+        if (auth) {
+            navigate('/');
+        }
+    }, []);
+
+
     return (
         <div className="container">
             <h2>Logowanie: </h2>
@@ -48,12 +55,13 @@ export default function Login(props) {
 
             <form onSubmit={submit}>
                 <div className="form-group">
-                    <label>Email:</label>
-                    <input 
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)} 
-                    className="form-control" />
+                    <label htmlFor="email-input">Email:</label>
+                    <input
+                        id="email-input"    
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)} 
+                        className="form-control" />
                 </div>
                 <div className="form-group">
                     <label>Hasło:</label>

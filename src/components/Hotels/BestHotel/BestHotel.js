@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
 const BestHotel = (props) => {
     const [time, setTime] = useState('');
 
-    const endTime = moment().add(23, 'minutes').add(34, 'seconds');
+    let endTime = useRef(null);
+    endTime = moment().add(30, 'minutes');
+
     const hotel = props.getHotel();
-    let interval = null;
+    let interval = useRef(null);
 
     useEffect(() => {
-        interval = setInterval(() => {
+        interval.current = setInterval(() => {
             const leftTime = -moment().diff(endTime)/1000;
             const minutes = Math.floor(leftTime / 60);
             const seconds = Math.floor(leftTime % 60);
             setTime(`minuty: ${minutes}, sekundy: ${seconds}`);
         }, 1000);
         return () => {
-            clearInterval(interval);
+            clearInterval(interval.current);
         }
     }, []);
 

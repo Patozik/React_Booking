@@ -42,7 +42,7 @@ export default function Login(props) {
         if (auth) {
             navigate('/');
         }
-    }, []);
+    }, [auth, navigate]);
 
 
     return (

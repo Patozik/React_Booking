@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import ThemeContext from "../../../context/themeContext";
+// import ThemeContext from "../../../context/themeContext";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function Searchbar(props){
     
     const [term, setTerm] = useState('');
-    const theme = useContext(ThemeContext);
+    // const theme = useContext(ThemeContext);
+    const theme = useSelector(state => state.theme);
     const inputRef = useRef();
     const navigate = useNavigate();
 
@@ -35,7 +37,7 @@ function Searchbar(props){
                 />
                         <button
                             onClick={search}
-                            className={`btn btn-${theme.color} ms-2`}>
+                            className={`btn btn-${theme} ms-2`}>
                             Szukaj
                         </button> 
             </div>

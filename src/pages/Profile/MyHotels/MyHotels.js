@@ -8,16 +8,6 @@ export default function MyHotels(props) {
     const [auth] = useAuth();
     const [hotels, setHotels] = useState([]);
 
-    const fetchHotels = async () => {
-        try {
-            const res = await axios.get('/hotels.json');
-            const newHotel = objectToArrayWithId(res.data).filter(hotel => hotel.user_id === auth.userId);
-            setHotels(newHotel);
-        } catch (err) {
-            console.log(err.response);
-        }
-    }
-
     const deleteHandler = async id => {
         try {
             await axios.delete(`/hotels/${id}.json?auth=${auth.token}`);
@@ -28,24 +18,36 @@ export default function MyHotels(props) {
     };
 
     useEffect(() => {
+        const fetchHotels = async () => {
+            try {
+                const res = await axios.get('/hotels.json');
+                const newHotel = objectToArrayWithId(res.data).filter(hotel => hotel.user_id === auth.userId);
+                setHotels(newHotel);
+            } catch (err) {
+                console.log(err.response);
+            }
+        }
+
         fetchHotels();
-    },[]);
+    }, [auth.userId]);
 
     return (
         <div>
             {hotels ? (
                 <table className='table'>
                     <thead>
-                        <th>Nazwa</th>
-                        <th>Opcje</th>
-                        <th>Opcje</th>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Opcje</th>
+                            <th>Opcje</th>
+                        </tr>
                     </thead>
                     <tbody>
-                       {hotels.map((hotel, index) => (
-                           <tr>
+                       {hotels.map(hotel => (
+                           <tr key={hotel.id}>
                                <td>{hotel.name}</td>
                                 <td>
-                                    {hotel.status == 1 
+                                    {parseInt(hotel.status) === 1 
                                         ? <span className='badge bg-success'>Aktywny</span> 
                                         : <span className='badge bg-danger'>Nie aktywny</span> 
                                     }
